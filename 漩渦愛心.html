@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Hearts</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fad0c4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff6f91;
+            animation: move 8s linear forwards;
+            text-shadow: 0 0 10px rgba(255, 105, 135, 0.8);
+        }
+
+        .heart::before {
+            content: '❤';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: inherit;
+            opacity: 0.6;
+            animation: trail 8s linear forwards;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translate(0, 0) scale(0.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(calc(var(--dx, 0) * 1px), calc(var(--dy, 0) * 1px)) scale(2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes trail {
+            0% {
+                transform: translate(0, 0) scale(0.8);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(calc(var(--dx, 0) * 1px), calc(var(--dy, 0) * 1px)) scale(1.8);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const body = document.body;
+        let currentAngle = 0; // Start from 0 degrees
+
+        function createHeart() {
+            for (let i = 0; i < 5; i++) { // Create 3 hearts
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+
+                const size = Math.random() * 20 + 30;
+                const angle = ((currentAngle + (i * 72)) * Math.PI) / 180; // Spread hearts with 120 degree angles
+                const distance = 400; // Fixed distance for uniform speed
+                const dx = Math.cos(angle) * distance;
+                const dy = Math.sin(angle) * distance;
+
+                heart.style.fontSize = `${size}px`;
+                heart.style.left = `${window.innerWidth / 2}px`;
+                heart.style.top = `${window.innerHeight / 2}px`;
+                heart.style.setProperty('--dx', dx);
+                heart.style.setProperty('--dy', dy);
+
+                body.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 9000);
+            }
+            currentAngle = (currentAngle + 11) % 360; // Increment angle by 11 degrees
+        }
+
+        setInterval(createHeart, 400);
+    </script>
+</body>
+</html>
